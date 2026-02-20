@@ -16,5 +16,8 @@ export async function fetchRemotive() {
     tags: j.tags || [],
     snippet: j.description?.replace(/<[^>]*>/g, "").slice(0, 200) || "",
     salaryText: j.salary || "",
+    salaryMin: null,
+    salaryMax: null,
+    region: "Remote",
   }));
 }

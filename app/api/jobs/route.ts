@@ -1,9 +1,11 @@
 import { fetchRemotive } from "../../../lib/sources/remotive";
 import { fetchArbeitNow } from "../../../lib/sources/arbeitnow";
+import { fetchRemoteOK } from "../../../lib/sources/remoteok";
 import { dedupeJobs, filterJobs } from "../../../lib/normalize";
 import { isWeb3Job } from "../../../lib/web3";
 import { isFeatured } from "../../../lib/featured";
 import { categorize } from "../../../lib/category";
+import { parseSalaryText } from "../../../lib/salary";
 
 function toTime(v: unknown): number {
   if (!v) return 0;
@@ -31,6 +33,9 @@ export async function GET(req: Request) {
     const web3 = searchParams.get("web3") || "";
     const category = searchParams.get("category") || "";
     const hasSalary = searchParams.get("hasSalary") || "";
+    const region = searchParams.get("region") || "";
+    const minSalary = searchParams.get("minSalary") || "";
+    const maxSalary = searchParams.get("maxSalary") || "";
 
     const [a, b] = await Promise.all([fetchRemotive(), fetchArbeitNow()]);
     const all = dedupeJobs([...a, ...b]);
@@ -41,10 +46,56 @@ export async function GET(req: Request) {
       filtered = filtered.filter(isWeb3Job);
     }
 
-    let enriched = filtered.map((j: any) => ({
-      ...j,
-      category: categorize(j),
-    }));
+    
+    let enriched = filtered.map((j: any) => {
+      const cat = categorize(j);
+
+      // compute salary min/max from fields or from salaryText
+      let salaryMinComputed = typeof j.salaryMin === "number" ? j.salaryMin : null;
+      let salaryMaxComputed = typeof j.salaryMax === "number" ? j.salaryMax : null;
+
+      if ((!salaryMinComputed && !salaryMaxComputed) && j.salaryText) {
+        const parsed = parseSalaryText(String(j.salaryText));
+        salaryMinComputed = parsed.min;
+        salaryMaxComputed = parsed.max;
+      }
+
+      return {
+        ...j,
+        category: cat,
+        salaryMin: salaryMinComputed,
+        salaryMax: salaryMaxComputed,
+        region: j.region || (j.remote ? "Remote" : ""),
+      };
+    });
+
+    if (region) {
+      const r = region.toLowerCase();
+      enriched = enriched.filter((j: any) => String(j.region || "").toLowerCase() === r || (r === "global"));
+    }
+
+    const minS = minSalary ? Number(minSalary) : null;
+    const maxS = maxSalary ? Number(maxSalary) : null;
+
+    if (minS !== null && !Number.isNaN(minS)) {
+      enriched = enriched.filter((j: any) => {
+        const lo = typeof j.salaryMin === "number" ? j.salaryMin : null;
+        const hi = typeof j.salaryMax === "number" ? j.salaryMax : null;
+        if (lo === null && hi === null) return false;
+        if (hi !== null) return hi >= minS;
+        return lo !== null ? lo >= minS : false;
+      });
+    }
+
+    if (maxS !== null && !Number.isNaN(maxS)) {
+      enriched = enriched.filter((j: any) => {
+        const lo = typeof j.salaryMin === "number" ? j.salaryMin : null;
+        const hi = typeof j.salaryMax === "number" ? j.salaryMax : null;
+        if (lo === null && hi === null) return false;
+        if (lo !== null) return lo <= maxS;
+        return hi !== null ? hi <= maxS : false;
+      });
+    }
 
     if (category) {
       const c = category.toLowerCase();

@@ -13,6 +13,9 @@ type Job = {
   tags: string[];
   snippet: string;
   salaryText?: string;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  region?: string;
   category?: string;
   companyDisplay?: string;
 };
@@ -33,6 +36,9 @@ export default function JobsPage() {
   const [web3Only, setWeb3Only] = useState(false);
   const [category, setCategory] = useState("");
   const [hasSalary, setHasSalary] = useState(false);
+  const [region, setRegion] = useState("");
+  const [minSalary, setMinSalary] = useState("");
+  const [maxSalary, setMaxSalary] = useState("");
   const [featured, setFeatured] = useState<Job[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,9 +65,12 @@ export default function JobsPage() {
     if (web3Only) sp.set("web3", "true");
     if (category) sp.set("category", category);
     if (hasSalary) sp.set("hasSalary", "true");
+    if (region) sp.set("region", region);
+    if (minSalary) sp.set("minSalary", minSalary);
+    if (maxSalary) sp.set("maxSalary", maxSalary);
     const qs = sp.toString();
     return qs ? `/api/jobs?${qs}` : "/api/jobs";
-  }, [q, location, remote, web3Only, category, hasSalary]);
+  }, [q, location, remote, web3Only, category, hasSalary, region, minSalary, maxSalary]);
 
   useEffect(() => {
     setLoading(true);
@@ -89,7 +98,7 @@ export default function JobsPage() {
     <div className="container">
       <div className="topbar">
         <div>
-          <h1 style={{ margin: 0 }}>TAIKAI Community Jobs</h1>
+          <h1 style={{ margin: 0 }}>Taikai Community Jobs</h1>
           <p style={{ margin: "6px 0 0 0", color: "var(--muted)" }}>
             Nice good one. Aggregated listings (Remotive + ArbeitNow). Apply opens the original listing.
           </p>
@@ -127,6 +136,27 @@ export default function JobsPage() {
           <option value="IT Support">IT Support</option>
           <option value="Non-Technical">Non-Technical</option>
         </select>
+
+        <select value={region} onChange={(e) => setRegion(e.target.value)}>
+          <option value="">All regions</option>
+          <option value="Remote">Remote</option>
+          <option value="Europe">Europe</option>
+        </select>
+
+        <input
+          className="input"
+          placeholder="Min salary (e.g. 80000)"
+          value={minSalary}
+          onChange={(e) => setMinSalary(e.target.value)}
+          style={{ minWidth: 180 }}
+        />
+        <input
+          className="input"
+          placeholder="Max salary (e.g. 150000)"
+          value={maxSalary}
+          onChange={(e) => setMaxSalary(e.target.value)}
+          style={{ minWidth: 180 }}
+        />
 
         <label className="badge" style={{ cursor: "pointer" }}>
           <input

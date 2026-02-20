@@ -10,6 +10,10 @@ export type Job = {
   tags: string[];
   snippet: string;
   salaryText?: string;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  region?: string;
+  category?: string;
 };
 
 export function dedupeJobs(jobs: Job[]) {

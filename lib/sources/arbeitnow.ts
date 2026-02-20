@@ -16,5 +16,8 @@ export async function fetchArbeitNow() {
     tags: [],
     snippet: (j.description || "").replace(/<[^>]*>/g, "").slice(0, 200),
     salaryText: "",
+    salaryMin: null,
+    salaryMax: null,
+    region: "Europe",
   }));
 }

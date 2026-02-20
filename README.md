@@ -24,3 +24,16 @@ Featured jobs are detected automatically (hot keywords + last 7 days).
 ## Filters
 - Category (Front-end, Backend, Full Stack, DevOps, IT Support, Non-Technical)
 - Has salary (best effort; depends on source)
+
+
+## Sources (no API keys)
+- Remotive
+- ArbeitNow
+- RemoteOK (unofficial JSON feed; best effort)
+
+## Region filter
+Currently supports Remote and Europe based on source.
+
+## Salary
+- Structured salary used when provided
+- Otherwise best-effort parse from salary text
