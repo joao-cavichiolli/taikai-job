@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Chainlink Labs",
+    "careersUrl": "https://jobs.lever.co/chainlinklabs",
+    "website": "https://chain.link/"
+  },
+  {
+    "name": "Aave",
+    "careersUrl": "https://aave.com/careers",
+    "website": "https://aave.com/"
+  },
+  {
+    "name": "Consensys",
+    "careersUrl": "https://consensys.net/careers/",
+    "website": "https://consensys.io/"
+  },
+  {
+    "name": "Optimism",
+    "careersUrl": "https://jobs.lever.co/optimism",
+    "website": "https://www.optimism.io/"
+  },
+  {
+    "name": "Polygon Labs",
+    "careersUrl": "https://jobs.lever.co/polygonlabs",
+    "website": "https://polygon.technology/"
+  },
+  {
+    "name": "StarkWare",
+    "careersUrl": "https://jobs.lever.co/starkware",
+    "website": "https://starkware.co/"
+  },
+  {
+    "name": "Arbitrum (Offchain Labs)",
+    "careersUrl": "https://boards.greenhouse.io/offchainlabs",
+    "website": "https://offchainlabs.com/"
+  },
+  {
+    "name": "Alchemy",
+    "careersUrl": "https://jobs.ashbyhq.com/alchemy",
+    "website": "https://www.alchemy.com/"
+  },
+  {
+    "name": "OpenSea",
+    "careersUrl": "https://boards.greenhouse.io/opensea",
+    "website": "https://opensea.io/"
+  },
+  {
+    "name": "Uniswap Labs",
+    "careersUrl": "https://boards.greenhouse.io/uniswaplabs",
+    "website": "https://uniswap.org/"
+  }
+]
