@@ -129,12 +129,52 @@ export default function JobsPage() {
 
       {loading && <p style={{ color: "var(--muted)" }}>Loading…</p>}
 
+      {/* FEATURED SECTION */}
+      {featured.length > 0 && (
+        <>
+          <h2 style={{ marginBottom: 12 }}>Featured Jobs 🔥</h2>
+          <div className="grid" style={{ marginBottom: 20 }}>
+            {featured.map((j, idx) => (
+              <div key={`f-${idx}`} className="card featured">
+                <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+                  <div>
+                    <h3 style={{ margin: 0 }}>{j.title}</h3>
+                    <div className="meta">
+                      {(j.companyDisplay || j.company)} • {j.location} {j.remote ? "• Remote" : ""}
+                    </div>
+                  </div>
+
+                  <div className="badgesWrap">
+                    <span className="badge">{j.source}</span>
+                    {j.category && <span className="badge">{j.category}</span>}
+                    {j.salaryText && <span className="badge">{j.salaryText}</span>}
+                    <span className="badge hot">HOT</span>
+                  </div>
+                </div>
+
+                {j.snippet && (
+                  <p style={{ marginTop: 10, color: "var(--muted)" }}>
+                    {j.snippet}…
+                  </p>
+                )}
+
+                <div style={{ marginTop: 12 }}>
+                  <a className="buttonPrimary" href={j.url} target="_blank" rel="noreferrer">
+                    Apply
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       <h2>All Jobs</h2>
 
       <div className="grid">
         {jobs.map((j, idx) => (
           <div key={idx} className="card">
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
               <div>
                 <h3 style={{ margin: 0 }}>{j.title}</h3>
                 <div className="meta">
