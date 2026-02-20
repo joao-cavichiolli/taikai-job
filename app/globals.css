@@ -1,91 +1,109 @@
+
 :root{
   --bg: #ffffff;
-  --fg: #111111;
-  --muted: rgba(0,0,0,0.7);
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
   --card: #ffffff;
-  --border: #e5e5e5;
+  --border: #d2d2d7;
   --input: #ffffff;
-  --chip: #f4f4f5;
-  --link: #1d4ed8;
+  --chip: #f5f5f7;
+
+  --link: #0071e3;
+  --link-hover: #0077ed;
 }
 
 [data-theme="dark"]{
-  --bg: #0b0f19;
-  --fg: #e7eaf0;
-  --muted: rgba(231,234,240,0.75);
-  --card: #101827;
-  --border: #22304a;
-  --input: #0f172a;
-  --chip: #111f35;
-  --link: #93c5fd;
+  --bg: #000000;
+  --fg: #f5f5f7;
+  --muted: #a1a1a6;
+  --card: #0a0a0a;
+  --border: #2c2c2e;
+  --input: #0a0a0a;
+  --chip: #1c1c1e;
+
+  --link: #2997ff;
+  --link-hover: #46a5ff;
 }
 
-*{ box-sizing: border-box; }
-html, body{ height: 100%; }
 body{
   margin:0;
   background: var(--bg);
   color: var(--fg);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-a{ color: var(--link); text-decoration: none; }
-a:hover{ text-decoration: underline; }
-
-.container{
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px;
+h1{
+  font-size: 32px;
+  letter-spacing: -0.02em;
 }
 
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+h2{
+  font-size: 20px;
+  letter-spacing: -0.01em;
 }
 
-.controls{
-  display:flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
+p{
+  color: var(--muted);
 }
 
-.input, select{
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--input);
-  color: var(--fg);
-  outline: none;
+a{
+  color: var(--link);
+  text-decoration: none;
 }
 
-.input{ min-width: 220px; }
+a:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+}
 
 .button{
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 10px 16px;
+  border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--fg);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover{
+  border-color: var(--link);
+}
+
+.buttonPrimary{
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: var(--link);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.buttonPrimary:hover{
+  background: var(--link-hover);
+}
+
+.input, select{
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--input);
+  color: var(--fg);
 }
 
 .card{
   border: 1px solid var(--border);
   background: var(--card);
-  border-radius: 14px;
-  padding: 14px;
+  border-radius: 18px;
+  padding: 16px;
+  transition: all 0.2s ease;
 }
 
-.card h3{
-  margin: 0 0 6px 0;
-}
-
-.meta{
-  opacity: 0.85;
+.card:hover{
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
 
 .badge{
@@ -97,21 +115,15 @@ a:hover{ text-decoration: underline; }
   background: var(--chip);
   border: 1px solid var(--border);
   font-size: 12px;
-}
-
-.grid{
-  display:grid;
-  gap: 12px;
+  color: var(--fg);
 }
 
 .badge.hot{
-  border-color: rgba(255, 99, 71, 0.35);
-  background: rgba(255, 99, 71, 0.12);
+  border-color: var(--link);
+  background: rgba(0,113,227,0.1);
 }
 
 .card.featured{
-  border-color: rgba(255, 99, 71, 0.35);
-  box-shadow: 0 0 0 1px rgba(255, 99, 71, 0.12);
+  border-color: var(--link);
+  box-shadow: 0 0 0 1px rgba(0,113,227,0.15);
 }
-
-/* allow multiple badges to wrap nicely */
