@@ -9,13 +9,8 @@ type Job = {
   location: string;
   remote: boolean;
   url: string;
-  publishedAt: string | null;
-  tags: string[];
   snippet: string;
   salaryText?: string;
-  salaryMin?: number | null;
-  salaryMax?: number | null;
-  region?: string;
   category?: string;
   companyDisplay?: string;
 };
@@ -25,14 +20,14 @@ function getInitialTheme() {
   const saved = localStorage.getItem("theme");
   if (saved === "dark" || saved === "light") return saved;
   const prefersDark =
-    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
   return prefersDark ? "dark" : "light";
 }
 
 export default function JobsPage() {
-  const [q, setQ] = useState(""); 
-  const [location, setLocation] = useState(""); 
-  const [remote, setRemote] = useState(""); 
+  const [q, setQ] = useState("");
+  const [location, setLocation] = useState("");
+  const [remote, setRemote] = useState("");
   const [web3Only, setWeb3Only] = useState(false);
   const [category, setCategory] = useState("");
   const [hasSalary, setHasSalary] = useState(false);
@@ -46,7 +41,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     const t = getInitialTheme();
-    setTheme(t as any);
+    setTheme(t);
     document.documentElement.setAttribute("data-theme", t);
   }, []);
 
@@ -68,28 +63,16 @@ export default function JobsPage() {
     if (region) sp.set("region", region);
     if (minSalary) sp.set("minSalary", minSalary);
     if (maxSalary) sp.set("maxSalary", maxSalary);
-    const qs = sp.toString();
-    return qs ? `/api/jobs?${qs}` : "/api/jobs";
+    return `/api/jobs?${sp.toString()}`;
   }, [q, location, remote, web3Only, category, hasSalary, region, minSalary, maxSalary]);
 
   useEffect(() => {
     setLoading(true);
     fetch(url)
-      .then(async (r) => {
-        if (!r.ok) {
-          const txt = await r.text();
-          throw new Error(`API error ${r.status}: ${txt}`);
-        }
-        return r.json();
-      })
-      .then((d) => {
+      .then(r => r.json())
+      .then(d => {
         setFeatured(d.featured || []);
         setJobs(d.jobs || []);
-      })
-      .catch((e) => {
-        console.error(e);
-        setFeatured([]);
-        setJobs([]);
       })
       .finally(() => setLoading(false));
   }, [url]);
@@ -100,7 +83,7 @@ export default function JobsPage() {
         <div>
           <h1 style={{ margin: 0 }}>TAIKAI Community Jobs</h1>
           <p style={{ margin: "6px 0 0 0", color: "var(--muted)" }}>
-            Nice good one. Aggregated listings (Remotive + ArbeitNow). Apply opens the original listing.
+            Aggregated listings. Apply opens the original listing.
           </p>
         </div>
         <button className="button" onClick={toggleTheme}>
@@ -109,117 +92,45 @@ export default function JobsPage() {
       </div>
 
       <div className="controls">
-        <input
-          className="input"
-          placeholder="Search (DevOps, DevRel, Solidity...)"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <input
-          className="input"
-          placeholder="Location (Italy, EU, Remote...)"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
+        <input className="input" placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} />
+        <input className="input" placeholder="Location..." value={location} onChange={(e) => setLocation(e.target.value)} />
         <select value={remote} onChange={(e) => setRemote(e.target.value)}>
           <option value="">Remote + Onsite</option>
           <option value="true">Remote only</option>
           <option value="false">Onsite only</option>
         </select>
-
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">All categories</option>
-          <option value="Front-end Jobs">Front-end Jobs</option>
-          <option value="Backend Jobs">Backend Jobs</option>
+          <option value="Front-end Jobs">Front-end</option>
+          <option value="Backend Jobs">Backend</option>
           <option value="Full Stack">Full Stack</option>
           <option value="DevOps">DevOps</option>
           <option value="IT Support">IT Support</option>
           <option value="Non-Technical">Non-Technical</option>
         </select>
-
         <select value={region} onChange={(e) => setRegion(e.target.value)}>
           <option value="">All regions</option>
           <option value="Remote">Remote</option>
           <option value="Europe">Europe</option>
         </select>
+        <input className="input salary" placeholder="Min salary" value={minSalary} onChange={(e) => setMinSalary(e.target.value)} />
+        <input className="input salary" placeholder="Max salary" value={maxSalary} onChange={(e) => setMaxSalary(e.target.value)} />
 
-        <input
-          className="input"
-          placeholder="Min salary (e.g. 80000)"
-          value={minSalary}
-          onChange={(e) => setMinSalary(e.target.value)}
-          style={{ minWidth: 180 }}
-        />
-        <input
-          className="input"
-          placeholder="Max salary (e.g. 150000)"
-          value={maxSalary}
-          onChange={(e) => setMaxSalary(e.target.value)}
-          style={{ minWidth: 180 }}
-        />
-
-        <label className="badge" style={{ cursor: "pointer" }}>
-          <input
-            type="checkbox"
-            checked={hasSalary}
-            onChange={(e) => setHasSalary(e.target.checked)}
-            style={{ margin: 0 }}
-          />
+        <label className="badge">
+          <input type="checkbox" checked={hasSalary} onChange={(e) => setHasSalary(e.target.checked)} />
           Has salary
         </label>
 
-        <label className="badge" style={{ cursor: "pointer" }}>
-          <input
-            type="checkbox"
-            checked={web3Only}
-            onChange={(e) => setWeb3Only(e.target.checked)}
-            style={{ margin: 0 }}
-          />
+        <label className="badge">
+          <input type="checkbox" checked={web3Only} onChange={(e) => setWeb3Only(e.target.checked)} />
           Web3 only
         </label>
       </div>
 
       {loading && <p style={{ color: "var(--muted)" }}>Loading…</p>}
 
-      {featured.length > 0 && (
-        <>
-          <h2 style={{ marginTop: 18, marginBottom: 10 }}>Featured Jobs 🔥</h2>
-          <div className="grid" style={{ marginBottom: 18 }}>
-            {featured.map((j, idx) => (
-              <div key={`f-${idx}`} className="card featured">
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                  <div>
-                    <h3 style={{ margin: 0 }}>{j.title}</h3>
-                    <div className="meta">
-                      {(j.companyDisplay || j.company)} • {j.location} {j.remote ? "• Remote" : ""}
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <span className="badge">{j.source}</span>
-                    {j.category && <span className="badge">{j.category}</span>}
-                    {j.salaryText && <span className="badge">{j.salaryText}</span>}
-                    <span className="badge hot">HOT</span>
-                  </div>
-                </div>
+      <h2>All Jobs</h2>
 
-                {j.snippet && (
-                  <p style={{ marginTop: 10, color: "var(--muted)" }}>
-                    {j.snippet}…
-                  </p>
-                )}
-
-                <div style={{ marginTop: 10 }}>
-                  <a className="button" href={j.url} target="_blank" rel="noreferrer">
-                    Apply
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      <h2 style={{ marginTop: 18, marginBottom: 10 }}>All Jobs</h2>
       <div className="grid">
         {jobs.map((j, idx) => (
           <div key={idx} className="card">
@@ -230,10 +141,11 @@ export default function JobsPage() {
                   {(j.companyDisplay || j.company)} • {j.location} {j.remote ? "• Remote" : ""}
                 </div>
               </div>
-              <div style={{ textAlign: "right" }}>
+
+              <div className="badgesWrap">
                 <span className="badge">{j.source}</span>
-                    {j.category && <span className="badge">{j.category}</span>}
-                    {j.salaryText && <span className="badge">{j.salaryText}</span>}
+                {j.category && <span className="badge">{j.category}</span>}
+                {j.salaryText && <span className="badge">{j.salaryText}</span>}
               </div>
             </div>
 
@@ -243,8 +155,8 @@ export default function JobsPage() {
               </p>
             )}
 
-            <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <a className="button" href={j.url} target="_blank" rel="noreferrer">
+            <div style={{ marginTop: 12 }}>
+              <a className="buttonPrimary" href={j.url} target="_blank" rel="noreferrer">
                 Apply
               </a>
             </div>
