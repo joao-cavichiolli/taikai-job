@@ -98,7 +98,7 @@ export default function JobsPage() {
     <div className="container">
       <div className="topbar">
         <div>
-          <h1 style={{ margin: 0 }}>Taikai Community Jobs</h1>
+          <h1 style={{ margin: 0 }}>TAIKAI Community Jobs</h1>
           <p style={{ margin: "6px 0 0 0", color: "var(--muted)" }}>
             Nice good one. Aggregated listings (Remotive + ArbeitNow). Apply opens the original listing.
           </p>
